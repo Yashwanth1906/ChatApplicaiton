@@ -9,7 +9,10 @@ import session from "express-session";
 import { prisma } from "./db";
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}));
 
 //@ts-ignore
 app.use(session({
