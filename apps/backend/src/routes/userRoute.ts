@@ -1,6 +1,7 @@
 import express from "express"
 import { googleCallBack, userSignIn, userSignUp } from "../controllers/userController";
 import passport, { authenticate } from "passport";
+import { prisma } from "../db";
 
 
 export const userRouter = express.Router();
@@ -14,9 +15,19 @@ userRouter.get("/google/callback",passport.authenticate('google',{
     failureRedirect : '/login/failed'
 }));
 
-userRouter.get("/isauth",(req: any,res : any) =>{
+userRouter.get("/isauth",async(req: any,res : any) =>{
+    console.log("ISAUTh CALLED")
     if(req.isAuthenticated()){
-        res.json({authenticated : true,user: req.user})
+        console.log("Users: ",req.user);
+        const user = await prisma.user.findUnique({
+            where:{
+                id : req.user.id
+            },select:{
+                id : true,
+                name:true
+            }
+        })
+        res.json({authenticated : true,user: user})
     } else{
         res.json({authenticated: false,user: null})
     }

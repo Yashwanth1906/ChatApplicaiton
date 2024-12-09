@@ -1,13 +1,106 @@
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { useState } from "react"
+import { Input } from "./ui/input";
+import axios from "axios";
 
-export function DMList({body} : {body:string}) {
+interface Group {
+  name : string,
+  description : string,
+  adminId : string
+}
+
+export function DMList({body,userId} : {body:string,userId : string}) {
+  const [create,setCreate] = useState<Boolean>(false);
+  const [group,setGroup] = useState<Group>({
+    name:"",
+    description:"",
+    adminId:userId
+  })
+  const [joinGroupId,setJoinGroupId] = useState<string>("");
+  const [joinGroup,setJoinGroup] = useState<Boolean>(false);
+  const [groups,setGroups] = useState<Group[]>([]);
+  const createGroup = async()=>{
+    try{
+      await axios.post("http://localhost:6969/api/v1/admin/creategroup",{
+        name : group.name,
+        description : group.description,
+        adminId : group.adminId
+      }).then((res)=>{
+        if(res.data.group){
+          alert("Group Create successfully")
+        } else{
+          alert("Failed")
+        }
+      })
+      
+    }catch(e){
+      console.log(e);
+    }
+  }
+  const gnamechnage = (e : any) =>{
+    const {value} = e.target;
+    console.log(value);
+    setGroup((prev)=>({
+      ...prev,
+      name: value
+    }))
+  }
+
+  const gdescchnage = (e : any) =>{
+    const {value} = e.target;
+    setGroup((prev)=>({
+      ...prev,
+      description : value
+    }))
+  }
+
+  const joinGroupSubmit = async()=>{
+    try{
+      await axios.post("http://localhost:6969/api/v1/admin/joingroup",{
+        groupId : joinGroupId,
+        userId : userId
+      }).then((res)=>{
+        if(res.data.success){
+          alert("Joined Group")
+        } else {
+          alert("Failed")
+        }
+      })
+    } catch(e){
+      console.log(e);
+    }
+  }
+  const groupCreatePopUp = () =>{
+    return(
+      <div>
+          <label>Name: </label><Input placeholder="Enter the Group Name" onChange={gnamechnage} value={group.name}/>
+          <label>Description : </label><Input placeholder="Enter the Group Description" onChange={gdescchnage} value={group.description}/>
+          <button onClick={createGroup}>Create</button>
+      </div>
+    )
+  }
+
+  const groupJoinPopUp = () =>{
+    return(
+      <div>
+        <label>Group Id:</label><Input placeholder="Enter the groupId" onChange={(e) => setJoinGroupId(e.target.value)} value={joinGroupId}/>
+        <button onClick={joinGroupSubmit}>Join Group</button>
+      </div>
+    )
+  }
+
   return (
+  <>
+    <div className="">
+      <button onClick={()=>{setCreate(true);setJoinGroup(false)}}>Create Group</button>
+      <button onClick={()=>{setJoinGroup(true); setCreate(false)}}>Join Group</button>
+    </div>
     <div>
-      {/* <button onClick={create}>
-
-      </button> */}
+      {create && groupCreatePopUp()}
+      {joinGroup && groupJoinPopUp()}
+    </div>
     <ScrollArea className="h-[calc(100vh-128px)]">
       {[...Array(20)].map((_, i) => (
         <div key={i}>
@@ -34,7 +127,7 @@ export function DMList({body} : {body:string}) {
         </div>
       ))}
     </ScrollArea>
-    </div>
+  </>
   )
 }
 

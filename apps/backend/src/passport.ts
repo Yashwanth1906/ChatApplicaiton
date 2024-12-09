@@ -21,6 +21,7 @@ export const initPassport =()=>{
                 console.log(profile.emails[0].value);
                 console.log(profile.displayName)
                 const user = await prisma.user.upsert({
+                    //@ts-ignore
                     create:{
                         email : profile.emails[0].value,
                         name : profile.displayName,

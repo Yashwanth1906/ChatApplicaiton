@@ -23,8 +23,8 @@ model User {
   googleId String?
   lastLogin DateTime?
   admin Group[] @relation(name: "adminMapping")
-  groupId String
-  group Group @relation(fields: [groupId],references: [id],onDelete:Cascade,name: "addingUsers")
+  groupId String?
+  group Group? @relation(fields: [groupId],references: [id],onDelete:Cascade,name: "addingUsers")
 }
 
 model Group{

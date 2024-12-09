@@ -9,24 +9,35 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+interface User {
+    id : string,
+    name : string
+}
+
 export default function MainScreen (){
     const navigate = useNavigate();
     const [isAuthenticated,setIsAuthenticated] : any= useState(null);
+    const [user,setUser] = useState<User>({id : "",name : ""});
     const [body,setBody] = useState("groups");
     console.log(body)
 
-    useEffect(()=>{
-        axios.get("http://localhost:6969/api/v1/users/isauth",{
+    const isAuth = async()=>{
+        console.log("Auth called")
+        await axios.get("http://localhost:6969/api/v1/users/isauth",{
             withCredentials:true
         }).then((res)=>{
             if(res.data.authenticated === true){
+                setUser(res.data.user);
                 setIsAuthenticated(true);
             } else {
-                alert("Login first bth");
                 setIsAuthenticated(false);
             }
         })
-    })
+    }
+
+    useEffect(()=>{
+        isAuth();
+    },[])
 
     if(isAuthenticated === null){
         return(
@@ -42,7 +53,7 @@ export default function MainScreen (){
                 <SidebarNav changeBody={setBody} />
                 <div className="w-80 border-r border-[#3a3a5a] bg-[#0f0f2a]">
                   <SearchBar body={body}/>
-                  <DMList body={body}/>
+                  <DMList body={body} userId={user.id}/>
                 </div>
                 <div className="flex-1 flex flex-col bg-[#0a0a1f]">
                   <MessageTopBar />
