@@ -4,8 +4,12 @@ import { Separator } from "@/components/ui/separator"
 
 export function DMList({body} : {body:string}) {
   return (
+    <div>
+      {/* <button onClick={create}>
+
+      </button> */}
     <ScrollArea className="h-[calc(100vh-128px)]">
-      {[...Array(10)].map((_, i) => (
+      {[...Array(20)].map((_, i) => (
         <div key={i}>
           <div className={cn(
             "p-4 hover:bg-[#1a1a3a] cursor-pointer transition-colors duration-200",
@@ -17,7 +21,7 @@ export function DMList({body} : {body:string}) {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-semibold text-[#00ff9d]">{i + 1}</span>
+                  <span className="font-semibold text-[#00ff9d]">dev_{i + 1}</span>
                   <span className="text-xs text-[#4a4a6a]">13:37</span>
                 </div>
                 <div className="text-sm truncate text-[#7af3ff]">
@@ -30,6 +34,7 @@ export function DMList({body} : {body:string}) {
         </div>
       ))}
     </ScrollArea>
+    </div>
   )
 }
 

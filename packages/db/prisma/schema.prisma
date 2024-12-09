@@ -22,4 +22,16 @@ model User {
   password String?
   googleId String?
   lastLogin DateTime?
+  admin Group[] @relation(name: "adminMapping")
+  groupId String
+  group Group @relation(fields: [groupId],references: [id],onDelete:Cascade,name: "addingUsers")
+}
+
+model Group{
+  id String @id @default(uuid())
+  name String
+  description String
+  users User[] @relation(name: "addingUsers")
+  adminId String
+  admin User @relation(fields: [adminId],references: [id],onDelete: Cascade,name: "adminMapping")
 }

@@ -7,6 +7,7 @@ import passport from "passport";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import { prisma } from "./db";
+import { adminRouter } from "./routes/adminRoute";
 const app = express();
 
 app.use(cors({
@@ -40,20 +41,14 @@ app.use(passport.initialize());
 app.use(passport.authenticate('session'));
 
 app.use("/api/v1/users",userRouter);
+app.use("/api/v1/admin",adminRouter)
 
 app.get("/test",async(req : any,res : any)=>{
-    //@ts-ignore
-    // const removethisuser = await prisma.user.create({
-    //     data:{
-    //         "name":"Yashwanth",
-    //         "username":"Yashwanth",
-    //         "email":"yashwanthsakthivel01@gmail.com",
-    //         "password" :"123random"
-    //     }
-    // })
-
-    const users = await prisma.user.findMany({})
-    //@ts-ignore
-    // users.push({id: "123",username:"yashwanth",email:"yashwanthqiwq!fdsjkfsd",password:"fsdaj"});
-    res.send(users);
+    try{
+        const usersDeleted = await prisma.user.deleteMany({})
+        res.send("Thalla")
+    } catch(e){
+        console.log(e)
+        res.send(e)
+    }
 })

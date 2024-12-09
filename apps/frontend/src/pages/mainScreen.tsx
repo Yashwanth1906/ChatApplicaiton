@@ -40,7 +40,7 @@ export default function MainScreen (){
               <TopBar />
               <div className="flex flex-1 overflow-hidden">
                 <SidebarNav changeBody={setBody} />
-                <div className="w-80 border-r border-[#3a3a5a] bg-[#0f0f2a]">   // this div needs to conditionally rendered according to the group or dm useState
+                <div className="w-80 border-r border-[#3a3a5a] bg-[#0f0f2a]">
                   <SearchBar body={body}/>
                   <DMList body={body}/>
                 </div>

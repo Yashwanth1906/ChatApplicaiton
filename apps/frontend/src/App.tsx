@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './pages/login'
 import MainScreen from './pages/mainScreen'
-import React from 'react'
 import SignupPage from './pages/signup'
 
 export default function ChatApp() {
