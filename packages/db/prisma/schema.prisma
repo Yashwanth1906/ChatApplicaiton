@@ -1,8 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -14,24 +14,50 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  username String? @unique
-  name String
-  email String? @unique
-  phoneNo String? @unique
-  password String?
-  googleId String?
-  lastLogin DateTime?
-  admin Group[] @relation(name: "adminMapping")
-  groupId String?
-  group Group? @relation(fields: [groupId],references: [id],onDelete:Cascade,name: "addingUsers")
+  id         String       @id @default(uuid())
+  username   String?      @unique
+  name       String
+  email      String?      @unique
+  phoneNo    String?      @unique
+  password   String?
+  googleId   String?
+  lastLogin  DateTime?
+  groups     Group[]      @relation("UserGroups")
+  adminOf    Group[]      @relation("GroupAdmins")
+  UserGroups UserGroups[]
+  GroupAdmin GroupAdmin[]
 }
 
-model Group{
-  id String @id @default(uuid())
-  name String
+model Group {
+  id          String       @id @default(uuid())
+  name        String
   description String
-  users User[] @relation(name: "addingUsers")
-  adminId String
-  admin User @relation(fields: [adminId],references: [id],onDelete: Cascade,name: "adminMapping")
+  members     User[]       @relation("UserGroups")
+  admins      User[]       @relation("GroupAdmins")
+  UserGroups  UserGroups[]
+  GroupAdmin  GroupAdmin[]
+}
+
+model UserGroups {
+  id String @id @default(uuid())
+
+  userId  String
+  groupId String
+
+  groups Group @relation(fields: [groupId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+model GroupAdmin {
+  id String @id @default(uuid())
+
+  userId  String
+  groupId String
+
+  groups Group @relation(fields: [groupId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
+
+  @@unique([userId, groupId])
 }

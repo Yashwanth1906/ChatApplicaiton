@@ -8,6 +8,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/passport-local": "^1.0.38",
     "prettier": "^3.2.5",
     "turbo": "^2.3.3",
     "typescript": "5.5.4"
@@ -23,6 +25,8 @@
   "dependencies": {
     "@prisma/client": "^6.0.1",
     "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "passport-local": "^1.0.0",
     "prisma": "^6.0.1",
     "react-router-dom": "^7.0.2"
   }

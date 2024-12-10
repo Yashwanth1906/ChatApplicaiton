@@ -42,6 +42,7 @@ app.use(passport.authenticate('session'));
 
 app.use("/api/v1/users",userRouter);
 app.use("/api/v1/admin",adminRouter)
+app.use
 
 app.get("/test",async(req : any,res : any)=>{
     try{

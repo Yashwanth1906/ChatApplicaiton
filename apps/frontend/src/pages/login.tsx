@@ -2,9 +2,58 @@ import { Shield } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import axios from 'axios'
+import { BACKEND_URL } from '@/constants'
+
+interface LoginCredentials{
+  phoneno : string,
+  password : string
+}
+
 
 export default function LoginPage() {
+  const [credentails,setCredentails] = useState<LoginCredentials>({
+    phoneno : "",
+    password : ""
+  })
+
+  const navigate = useNavigate();
+
+  const handlePhonenoChange = (e: any) =>{
+    const {value} = e.target;
+    setCredentails((prev)=>({
+      ...prev,
+      phoneno:value
+    }))
+  }
+
+  const handlePasswordChange = (e : any) =>{
+    const {value} = e.target;
+    setCredentails((prev)=>({
+      ...prev,
+      password : value
+    }))
+  }
+
+  const Login = async() =>{
+    await axios.post(`${BACKEND_URL}/users/signinWithEmail`,{
+      phoneno : credentails.phoneno,
+      password : credentails.password
+    }).then((res)=>{
+      console.log(res)
+      // if(res.data.status === 200){
+      //   navigate("/")
+      // } else {
+      //   alert(res.data.message)
+      // }
+      navigate("/")
+    }).catch((e)=>{
+      alert(e)
+    })
+  }
+  
   const google = ()=>{
     window.open("http://localhost:6969/api/v1/users/signinWithGoogle",'_self');
   }
@@ -22,14 +71,16 @@ export default function LoginPage() {
               type="tel" 
               placeholder="Phone Number" 
               className="bg-[#1a1a3a] border-[#3a3a5a] text-[#7af3ff] placeholder-[#4a4a6a]"
+              onChange={handlePhonenoChange} value={credentails.phoneno}
             />
             <Input 
               type="password" 
               placeholder="Password" 
               className="bg-[#1a1a3a] border-[#3a3a5a] text-[#7af3ff] placeholder-[#4a4a6a]"
+              onChange={handlePasswordChange} value={credentails.password}
             />
           </div>
-          <Button className="w-full bg-[#00ff9d] text-[#0a0a1f] hover:bg-[#00cc7a]">
+          <Button className="w-full bg-[#00ff9d] text-[#0a0a1f] hover:bg-[#00cc7a]" onClick={Login}>
             Log in
           </Button>
         </form>

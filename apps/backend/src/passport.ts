@@ -1,6 +1,8 @@
 import passport from "passport";
 //@ts-ignore
 import {Strategy as GoogleStartegy} from "passport-google-oauth20";
+import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from "bcryptjs"
 import { prisma } from "./db";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID? process.env.GOOGLE_CLIENT_ID : "";
@@ -35,12 +37,37 @@ export const initPassport =()=>{
             }
     )
     )
+    passport.use('phone-login',             // this thing is used to login using phone number and maintain session for it . 
+        new LocalStrategy({                 // for that i used pasport-local in that we need to pass two fields ,
+            //@ts-ignore                    // which is usernameField and we need to map it with a unique field and passwordField.
+            usernameField : "phoneno",
+            passwordField : "password"
+        },async (phoneno,password,done) =>{
+            try{
+                const user = await prisma.user.findUnique({where:{phoneNo : phoneno}})
+                if(!user){
+                    return done(null,false,{message:"Invalid Phone Number"})
+                }
+                //@ts-ignore
+                const match = await bcrypt.compare(password,user.password);
+                if(!match){
+                    return done(null,false,{message:"Wrong credentials"})
+                }
+                return done(null,user);
+            } catch(e){
+                console.log(e)
+                return done(e);
+            }
+        }
+    )
+    )
+
     passport.serializeUser((user : any,callback)=>{
         process.nextTick(()=>{
             return callback(null,{
                 id : user.id,
                 username : user.username,
-                picture : user.picture
+                // picture : user.picture
             })
         })
     })
