@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import { prisma } from "./db";
 import { adminRouter } from "./routes/adminRoute";
+import { globalAuth } from "./middleware/auth";
 const app = express();
 
 app.use(cors({
@@ -35,14 +36,12 @@ app.listen(6969,()=>{
 
 initPassport();
 //@ts-ignore
-
-
 app.use(passport.initialize());
 app.use(passport.authenticate('session'));
-
+app.use(passport.session());
 app.use("/api/v1/users",userRouter);
-app.use("/api/v1/admin",adminRouter)
-app.use
+app.use("/api/v1/admin",adminRouter);
+app.use("/api/v1/auth",globalAuth);
 
 app.get("/test",async(req : any,res : any)=>{
     try{

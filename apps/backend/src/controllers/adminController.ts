@@ -3,7 +3,8 @@ import { prisma } from "../db";
 
 export const createGroup = async(req: any,res : any)=>{
     try{
-        const {name,description,adminId} = req.body;
+        const {name,description} = req.body;
+        console.log("Create Group user :",req.user)
         await prisma.$transaction(async(tx)=>{
             const group = await tx.group.create({
                 data:{
@@ -13,13 +14,13 @@ export const createGroup = async(req: any,res : any)=>{
             })
             const adminAdd = await tx.groupAdmin.create({
                 data:{
-                    userId : adminId,
+                    userId : req.user.id,
                     groupId : group.id
                 }
             })
             const userAdd = await tx.userGroups.create({
                 data:{
-                    userId : adminId,
+                    userId : req.user.id,
                     groupId : group.id
                 }
             })
@@ -27,7 +28,7 @@ export const createGroup = async(req: any,res : any)=>{
         })
     }catch(e){
         console.log(e);
-        res.status(505).send(e)
+        res.status(505).send(e);
     }
 }
 

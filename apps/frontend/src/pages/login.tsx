@@ -37,12 +37,13 @@ export default function LoginPage() {
     }))
   }
 
-  const Login = async() =>{
+  const Login = async(event : any) =>{
+    event.preventDefault();
+    console.log("Login form submitting")
     await axios.post(`${BACKEND_URL}/users/signinWithEmail`,{
       phoneno : credentails.phoneno,
       password : credentails.password
     }).then((res)=>{
-      console.log(res)
       // if(res.data.status === 200){
       //   navigate("/")
       // } else {
@@ -97,7 +98,7 @@ export default function LoginPage() {
         </Button>
         <div className="text-center text-sm">
           Haven't registered?{' '}
-          <Link to={""} className="font-semibold text-[#00ff9d] hover:underline">
+          <Link to={"/signup"} className="font-semibold text-[#00ff9d] hover:underline">
             Sign up
           </Link>
         </div>

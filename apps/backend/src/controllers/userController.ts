@@ -65,3 +65,20 @@ export const LogOut  = (req: any,res : any) =>{
         }
     })
 }
+
+export const getGroups = async(req:any,res: any) =>{
+    try{
+        const groups = await prisma.userGroups.findMany({
+            //@ts-ignore
+            where:{
+                userId: req.user.i
+            },select:{
+                groups:true
+            }
+        })
+        console.log(groups);
+        res.status(200).json({groups: groups})
+    } catch(e){
+        console.log(e);
+    }
+}

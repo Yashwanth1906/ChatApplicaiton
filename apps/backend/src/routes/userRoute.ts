@@ -1,7 +1,8 @@
 import express from "express"
-import { googleCallBack, LogOut, userSignIn, userSignUp } from "../controllers/userController";
+import { getGroups, googleCallBack, LogOut, userSignIn, userSignUp } from "../controllers/userController";
 import passport, { authenticate } from "passport";
 import { prisma } from "../db";
+import { auth } from "../middleware/auth";
 
 
 export const userRouter = express.Router();
@@ -14,3 +15,4 @@ userRouter.get("/google/callback",passport.authenticate('google',{
     failureRedirect : '/login/failed'
 }));
 userRouter.get("/logout",LogOut)
+userRouter.get("/getgroups",auth,getGroups);
