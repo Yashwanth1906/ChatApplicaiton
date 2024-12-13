@@ -1,5 +1,5 @@
 import { WebSocket } from "ws"
-import { IncomingMessage, SUBSCRIBE, UNSUBSCRIBE } from "./types/types";
+import { IncomingMessage, PUBLISH, SUBSCRIBE, UNSUBSCRIBE } from "./types/types";
 import { SubscriptionManager } from "./SubscriptionManager";
 
 export class User{
@@ -8,10 +8,12 @@ export class User{
     public constructor(id :string,ws : WebSocket){
         this.id = id;
         this.ws = ws;
-        this.addListeners();
+        this.emit(id);
+         this.addListeners();
     }
 
     public emit(message : string){
+        console.log("from emit: "+message);
         this.ws.send(JSON.stringify(message));
     }
 
@@ -23,6 +25,9 @@ export class User{
             }
             if(parsedMessage.method === UNSUBSCRIBE){
                 SubscriptionManager.getInstance().unsubscibe(parsedMessage.groupId,parsedMessage.userId)
+            }
+            if(parsedMessage.method === PUBLISH){
+                SubscriptionManager.getInstance().publish(parsedMessage.groupId,parsedMessage.userId,parsedMessage.message)
             }
         })
     }

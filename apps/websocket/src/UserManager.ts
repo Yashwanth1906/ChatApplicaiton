@@ -20,6 +20,7 @@ export class UserManager{
         const id = this.getRandomId();
         const user = new User(id,ws);
         this.users.set(id,user);
+        console.log(this.users);
         this.registerClose(ws,id);
         return user;
     }
@@ -27,7 +28,7 @@ export class UserManager{
     private registerClose = (ws : WebSocket,id : string)=>{
         ws.on("close",()=>{
             this.users.delete(id);
-            SubscriptionManager.getInstance().userLeft(id);
+            SubscriptionManager.getInstance().userLeft("",id);
         })
     }
 
@@ -36,8 +37,7 @@ export class UserManager{
     }
 
     public getUser(id : string) : User | undefined{
+        console.log("UserId from getUser:"+id)
         return this.users.get(id);
     }
-
-
 }
