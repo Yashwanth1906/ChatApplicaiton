@@ -20,7 +20,7 @@ export class UserManager{
         const id = this.getRandomId();
         const user = new User(id,ws);
         this.users.set(id,user);
-        console.log(this.users);
+        // console.log(this.users);
         this.registerClose(ws,id);
         return user;
     }

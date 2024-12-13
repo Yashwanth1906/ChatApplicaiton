@@ -48,8 +48,7 @@ export class SubscriptionManager{
         const result = await prisma.userGroups.findUnique({
             //@ts-ignore
             where:{
-                userId : userId,
-                groupId : groupId
+                userId_groupId : {userId,groupId}
             }
         })
         if(result !== null){

@@ -50,6 +50,7 @@ export function DMList({body,userId} : {body:string,userId : string}) {
         name : group.name,
         description : group.description,
       },{withCredentials:true}).then((res)=>{
+        console.log(res.data);
         alert("Group Created")
       })
       
@@ -76,10 +77,12 @@ export function DMList({body,userId} : {body:string,userId : string}) {
 
   const joinGroupSubmit = async()=>{
     try{
+      console.log(userId,)
       await axios.post("http://localhost:6969/api/v1/admin/joingroup",{
         groupId : joinGroupId,
         userId : userId
-      }).then((res)=>{
+      },{withCredentials:true}).then((res)=>{
+        console.log(res.data);
         if(res.data.success){
           alert("Joined Group")
         } else {

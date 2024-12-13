@@ -16,18 +16,19 @@ export class User{
         console.log("from emit: "+message);
         this.ws.send(JSON.stringify(message));
     }
+    
 
     private addListeners = ()=>{
         this.ws.on("message",(message:string)=>{
             const parsedMessage : IncomingMessage = JSON.parse(message);
             if(parsedMessage.method === SUBSCRIBE){
-                SubscriptionManager.getInstance().subscribe(parsedMessage.groupId,parsedMessage.userId);
+                SubscriptionManager.getInstance().subscribe(parsedMessage.groupId,parsedMessage.userId,parsedMessage.wsId);
             }
             if(parsedMessage.method === UNSUBSCRIBE){
-                SubscriptionManager.getInstance().unsubscibe(parsedMessage.groupId,parsedMessage.userId)
+                SubscriptionManager.getInstance().unsubscibe(parsedMessage.groupId,parsedMessage.userId,parsedMessage.wsId)
             }
             if(parsedMessage.method === PUBLISH){
-                SubscriptionManager.getInstance().publish(parsedMessage.groupId,parsedMessage.userId,parsedMessage.message)
+                SubscriptionManager.getInstance().publish(parsedMessage.groupId,parsedMessage.userId,parsedMessage.message,parsedMessage.wsId)
             }
         })
     }

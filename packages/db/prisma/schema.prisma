@@ -22,8 +22,8 @@ model User {
   password   String?
   googleId   String?
   lastLogin  DateTime?
-  groups     Group[]      @relation("UserGroups")
-  adminOf    Group[]      @relation("GroupAdmins")
+  // groups     Group[]      @relation("UserGroups")
+  // adminOf    Group[]      @relation("GroupAdmins")
   UserGroups UserGroups[]
   GroupAdmin GroupAdmin[]
 }
@@ -32,8 +32,8 @@ model Group {
   id          String       @id @default(uuid())
   name        String
   description String
-  members     User[]       @relation("UserGroups")
-  admins      User[]       @relation("GroupAdmins")
+  // members     User[]       @relation("UserGroups")
+  // admins      User[]       @relation("GroupAdmins")
   UserGroups  UserGroups[]
   GroupAdmin  GroupAdmin[]
 }
