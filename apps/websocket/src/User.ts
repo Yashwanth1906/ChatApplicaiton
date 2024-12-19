@@ -8,8 +8,8 @@ export class User{
     public constructor(id :string,ws : WebSocket){
         this.id = id;
         this.ws = ws;
-        this.emit(id);
-         this.addListeners();
+        this.ws.send(JSON.stringify({"websocketId" : id}));
+        this.addListeners();
     }
 
     public emit(message : string){
